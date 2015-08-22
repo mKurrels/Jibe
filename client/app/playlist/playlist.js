@@ -16,13 +16,13 @@ playlist.factory('playlistDatabase', function($http) {
     // this will be called when a user loads the room and whenever a succesful post request occurs to the db (so
     // the user can see the updated playlist when after they add somethng to it)
     var getQueue = function(partyName) {
-      console.log('partyname', partyName);
         return $http({
                 method: 'POST',
                 url: '/api/getPlaylist/',
-                data: {'name': 'natesCoolParty'}
+                data: {'name': partyName}
             })
             .then(function(resp) {
+              console.log(resp.data, 'resp.data');
               return resp.data;
             });
     };
@@ -33,7 +33,7 @@ playlist.factory('playlistDatabase', function($http) {
             url: '/api/playlist/add/' + playlistId + '/' + songData.uri,
             data: songData
         });
-    };
+    }; 
 
     var removeSong = function(songData, playlistId) {
         return $http({
@@ -57,7 +57,8 @@ playlist.controller('PlaylistController', function ($scope, $window, $location, 
     window.history.back();
   };
 
-  playlistDatabase.getQueue('natesCoolParty');
+
+  $scope.playlist = playlistDatabase.getQueue($window.party.name);
 
   // // search functionality
   // $scope.modalShown = false;
@@ -91,30 +92,6 @@ playlist.controller('PlaylistController', function ($scope, $window, $location, 
   // the data will also need to be added to the db
   // we should probably not even have a $scope.results but actually just post this to the db via the server
   // on success to posting to the db we should do a get request and update the users view
-  $scope.playlist = [{
-    artist: 'Katy Perry',
-    title: 'Unconditionally',
-    uri: 'XjwZAa2EjKA',
-    $$hashKey: 'object:22',
-    votes: 0,
-    id: '12345'
-  }, 
-  {
-    artist: 'Rick Astley',
-    title: 'Never Gonna Give You Up',
-    uri: 'XjwZAa2EjKA',
-    $$hashKey: 'object:21',
-    votes: 3,
-    id: '12345'
-  },
-  {
-    artist: 'David Rosson',
-    title: 'Argle My Bargle',
-    uri: 'XjwZAa2EjKA',
-    $$hashKey: 'object:20',
-    votes: 10,
-    id: '12345'
-  }];
 
   $scope.selectSong = function(song) {
     // console.log(song);
